@@ -1,225 +1,582 @@
 {
     "swagger": "2.0",
     "info": {
-        "version": "1.0.9-abcd",
-        "title": "Swagger Sample API",
-        "description": "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
-        "termsOfService": "http://helloreverb.com/terms/",
+        "description": "这是版易和Rays系统集成交互API文档",
+        "version": "1.0.0",
+        "title": "版易、Rays平台集成API",
         "contact": {
-            "name": "swagger api team",
-            "url": "http://swagger.io"
+            "email": "jason_tu@puyacn.com"
         },
         "license": {
-            "name": "Creative Commons 4.0 International",
-            "url": "http://creativecommons.org/licenses/by/4.0/"
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         }
     },
-    "basePath": "/v1",
     "schemes": [
-        "http",
         "https"
-    ],
-    "consumes": [
-        "application/json"
-    ],
-    "produces": [
-        "application/json",
-        "application/xml"
     ],
     "security": [
         {
-            "githubAccessCode": [
-                "user",
-                "user:email",
-                "user:follow",
-                "public_repo",
-                "repo",
-                "repo_deployment",
-                "repo:status",
-                "delete_repo",
-                "notifications",
-                "gist",
-                "read:repo_hook",
-                "write:repo_hook",
-                "admin:repo_hook",
-                "read:org",
-                "write:org",
-                "admin:org",
-                "read:public_key",
-                "write:public_key",
-                "admin:public_key"
-            ]
-        },
-        {
-            "petstoreImplicit": [
-                "user",
-                "user:email",
-                "user:follow",
-                "public_repo",
-                "repo",
-                "repo_deployment",
-                "repo:status",
-                "delete_repo",
-                "notifications",
-                "gist",
-                "read:repo_hook",
-                "write:repo_hook",
-                "admin:repo_hook",
-                "read:org",
-                "write:org",
-                "admin:org",
-                "read:public_key",
-                "write:public_key",
-                "admin:public_key"
-            ]
-        },
-        {
-            "internalApiKey": []
+            "AWS4_HMAC_SHA256": []
         }
     ],
     "paths": {
-        "/pets/{id}": {
+        "/books/{book_id}/": {
             "get": {
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of pet to use",
-                        "required": true,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "collectionFormat": "csv"
-                    }
+                "summary": "获取单本书籍信息书籍信息",
+                "operationId": "getBookByID",
+                "description": "根据书籍唯一标识返回书籍详细信息",
+                "produces": [
+                    "application/json"
                 ],
-                "description": "Returns pets based on ID",
-                "summary": "Find pets by ID",
-                "operationId": "getPetsById",
                 "security": [
                     {
-                        "githubAccessCode": [
-                            "user"
-                        ]
-                    },
-                    {
-                        "internalApiKey": []
+                        "AWS4_HMAC_SHA256": []
                     }
-                ],
-                "produces": [
-                    "application/json",
-                    "text/html"
                 ],
                 "responses": {
                     "200": {
-                        "description": "pet response",
+                        "description": "书籍信息",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Pet"
-                            }
+                            "$ref": "#/definitions/Book"
                         }
                     },
-                    "default": {
-                        "description": "error payload",
+                    "401": {
+                        "description": "鉴权问题",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    },
+                    "403": {
+                        "description": "操作被禁止",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    },
+                    "404": {
+                        "description": "所对应书籍不存在",
                         "schema": {
                             "$ref": "#/definitions/ErrorModel"
                         }
                     }
                 }
-            }
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "book_id",
+                    "description": "书籍唯一标识",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/scanevents/{book_id}/": {
+            "get": {
+                "summary": "获取书籍二维码扫码信息",
+                "operationId": "getQrScannedInfoByBid",
+                "description": "根据书籍唯一标识和时间段参数返回书籍二维码扫码信息",
+                "security": [
+                    {
+                        "AWS4_HMAC_SHA256": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "基于某个时间段的二维码扫码数据： 1.返回的结果均处在开始和截止时间内；2.边界数据完整，不得漏传数据",
+                        "schema": {
+                            "$ref": "#/definitions/QrScanEvents"
+                        }
+                    },
+                    "401": {
+                        "description": "鉴权问题",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    },
+                    "403": {
+                        "description": "操作被禁止",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    },
+                    "404": {
+                        "description": "所对应书籍不存在",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "book_id",
+                    "description": "书籍唯一标识",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "name": "start_time",
+                    "description": "开始时间（时间戳）",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "in": "query",
+                    "name": "end_time",
+                    "description": "截止时间（时间戳）",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/readers/{user_id}/": {
+            "get": {
+                "summary": "获取读者详细信息",
+                "operationId": "getReaderByBid",
+                "description": "根据用户唯一标识获取读者详细信息",
+                "security": [
+                    {
+                        "AWS4_HMAC_SHA256": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "读者详细信息",
+                        "schema": {
+                            "$ref": "#/definitions/Readers"
+                        }
+                    },
+                    "401": {
+                        "description": "鉴权问题",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    },
+                    "403": {
+                        "description": "操作被禁止",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    },
+                    "404": {
+                        "description": "所对应书籍不存在",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "user_id",
+                    "description": "用户唯一标识",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/transactions/{book_id}/": {
+            "get": {
+                "summary": "获取书籍相关交易数据",
+                "operationId": "getTransactionsByBid",
+                "description": "根据书籍唯一标识获取书籍基于某个时间段的交易数据",
+                "security": [
+                    {
+                        "AWS4_HMAC_SHA256": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "基于某个时间的交易数据： 1.返回的结果均处在开始和截止时间内；2.边界数据完整，不得漏传数据",
+                        "schema": {
+                            "$ref": "#/definitions/Transactions"
+                        }
+                    },
+                    "401": {
+                        "description": "鉴权问题",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    },
+                    "403": {
+                        "description": "操作被禁止",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    },
+                    "404": {
+                        "description": "所对应书籍不存在",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "book_id",
+                    "description": "书籍唯一标识",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "in": "query",
+                    "name": "start_time",
+                    "description": "开始时间（时间戳）",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "in": "query",
+                    "name": "end_time",
+                    "description": "截止时间（时间戳）",
+                    "required": false,
+                    "type": "integer"
+                }
+            ]
         }
     },
     "securityDefinitions": {
-        "githubAccessCode": {
-            "type": "oauth2",
-            "scopes": {
-                "user": "Grants read/write access to profile info only. Note that this scope includes user:email and user:follow.",
-                "user:email": "Grants read access to a user’s email addresses.",
-                "user:follow": "Grants access to follow or unfollow other users.",
-                "public_repo": "Grants read/write access to code, commit statuses, and deployment statuses for public repositories and organizations.",
-                "repo": "Grants read/write access to code, commit statuses, and deployment statuses for public and private repositories and organizations.",
-                "repo_deployment": "Grants access to deployment statuses for public and private repositories. This scope is only necessary to grant other users or services access to deployment statuses, without granting access to the code.",
-                "repo:status": "Grants read/write access to public and private repository commit statuses. This scope is only necessary to grant other users or services access to private repository commit statuses without granting access to the code.",
-                "delete_repo": "Grants access to delete adminable repositories.",
-                "notifications": "Grants read access to a user’s notifications. repo also provides this access.",
-                "gist": "Grants write access to gists.",
-                "read:repo_hook": "Grants read and ping access to hooks in public or private repositories.",
-                "write:repo_hook": "Grants read, write, and ping access to hooks in public or private repositories.",
-                "admin:repo_hook": "Grants read, write, ping, and delete access to hooks in public or private repositories.",
-                "read:org": "Read-only access to organization, teams, and membership.",
-                "write:org": "Publicize and unpublicize organization membership.",
-                "admin:org": "Fully manage organization, teams, and memberships.",
-                "read:public_key": "List and view details for public keys.",
-                "write:public_key": "Create, list, and view details for public keys.",
-                "admin:public_key": "Fully manage public keys."
-            },
-            "flow": "accessCode",
-            "authorizationUrl": "https://github.com/login/oauth/authorize",
-            "tokenUrl": "https://github.com/login/oauth/access_token"
-        },
-        "petstoreImplicit": {
-            "type": "oauth2",
-            "scopes": {
-                "user": "Grants read/write access to profile info only. Note that this scope includes user:email and user:follow.",
-                "user:email": "Grants read access to a user’s email addresses.",
-                "user:follow": "Grants access to follow or unfollow other users.",
-                "public_repo": "Grants read/write access to code, commit statuses, and deployment statuses for public repositories and organizations.",
-                "repo": "Grants read/write access to code, commit statuses, and deployment statuses for public and private repositories and organizations.",
-                "repo_deployment": "Grants access to deployment statuses for public and private repositories. This scope is only necessary to grant other users or services access to deployment statuses, without granting access to the code.",
-                "repo:status": "Grants read/write access to public and private repository commit statuses. This scope is only necessary to grant other users or services access to private repository commit statuses without granting access to the code.",
-                "delete_repo": "Grants access to delete adminable repositories.",
-                "notifications": "Grants read access to a user’s notifications. repo also provides this access.",
-                "gist": "Grants write access to gists.",
-                "read:repo_hook": "Grants read and ping access to hooks in public or private repositories.",
-                "write:repo_hook": "Grants read, write, and ping access to hooks in public or private repositories.",
-                "admin:repo_hook": "Grants read, write, ping, and delete access to hooks in public or private repositories.",
-                "read:org": "Read-only access to organization, teams, and membership.",
-                "write:org": "Publicize and unpublicize organization membership.",
-                "admin:org": "Fully manage organization, teams, and memberships.",
-                "read:public_key": "List and view details for public keys.",
-                "write:public_key": "Create, list, and view details for public keys.",
-                "admin:public_key": "Fully manage public keys."
-            },
-            "flow": "implicit",
-            "authorizationUrl": "http://petstore.swagger.io/oauth/dialog"
-        },
-        "internalApiKey": {
+        "AWS4_HMAC_SHA256": {
             "type": "apiKey",
             "in": "header",
-            "name": "api_key"
+            "name": "api_key",
+            "description": "参考:http://docs.aws.amazon.com/general/latest/gr/signature-version-4.html"
         }
     },
     "definitions": {
-        "Pet": {
-            "type": "object",
-            "required": [
-                "name"
-            ],
+        "Book": {
             "properties": {
-                "name": {
-                    "type": "string"
+                "id": {
+                    "type": "string",
+                    "description": "书籍ID"
                 },
-                "tag": {
-                    "type": "string"
+                "name": {
+                    "type": "string",
+                    "description": "书籍名称"
+                },
+                "thumb": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "书籍缩略图"
+                },
+                "publisher": {
+                    "type": "string",
+                    "description": "出版社"
+                },
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Category"
+                    },
+                    "description": "书籍所属分类"
+                },
+                "isbn": {
+                    "type": "string",
+                    "description": "书籍ISBN号"
+                },
+                "author": {
+                    "type": "string",
+                    "description": "作者"
+                },
+                "price": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "书籍售价"
+                },
+                "publish_time": {
+                    "type": "string",
+                    "description": "出版时间"
+                },
+                "publish_count": {
+                    "type": "integer",
+                    "description": "出版册数"
+                },
+                "print_times": {
+                    "type": "integer",
+                    "description": "第几次印刷"
+                },
+                "character_count": {
+                    "type": "integer",
+                    "description": "书籍字数"
+                },
+                "qrcodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/QrCode"
+                    },
+                    "description": "二维码信息"
+                }
+            }
+        },
+        "Category": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "类别ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "类别名称"
+                }
+            }
+        },
+        "QrCode": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "二维码ID"
+                },
+                "url": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "二维码URL"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "二维码名称"
+                },
+                "desc": {
+                    "type": "string",
+                    "description": "二维码描述"
+                },
+                "created_time": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "二维码创建时间（时间戳）"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/QrTag"
+                    },
+                    "description": "二维码标签"
+                },
+                "resources": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/QrResource"
+                    },
+                    "description": "二维码对应资源"
+                }
+            }
+        },
+        "QrTag": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "标签ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "标签名称"
+                }
+            }
+        },
+        "QrResource": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "资源ID"
+                },
+                "url": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "资源URL"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "资源类型"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "资源标题"
+                },
+                "thumb": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "资源缩略图"
+                },
+                "desc": {
+                    "type": "string",
+                    "description": "资源描述"
+                }
+            }
+        },
+        "QrScanEvents": {
+            "properties": {
+                "start_time": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "起始时间（时间戳）"
+                },
+                "end_time": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "截止时间（时间戳）"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/QrScanEvent"
+                    },
+                    "description": "二维码扫描事件集"
+                }
+            }
+        },
+        "QrScanEvent": {
+            "properties": {
+                "user_id": {
+                    "type": "string",
+                    "description": "用户唯一标识"
+                },
+                "time": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "扫描时间（时间戳）"
+                },
+                "qr_id": {
+                    "type": "string",
+                    "description": "二维码ID"
+                },
+                "location": {
+                    "$ref": "#/definitions/Location"
+                }
+            }
+        },
+        "Location": {
+            "properties": {
+                "longitude": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "经度"
+                },
+                "latitude": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "纬度"
+                }
+            }
+        },
+        "Readers": {
+            "properties": {
+                "start_time": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "起始时间（时间戳）"
+                },
+                "end_time": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "截止时间（时间戳）"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Reader"
+                    },
+                    "description": "读者信息集"
+                }
+            }
+        },
+        "Reader": {
+            "properties": {
+                "user_id": {
+                    "type": "string",
+                    "description": "用户唯一标识"
+                },
+                "username": {
+                    "type": "string",
+                    "description": "用户名"
+                },
+                "nickname": {
+                    "type": "string",
+                    "description": "用户昵称"
+                },
+                "avater": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "用户头像URL"
+                },
+                "gender": {
+                    "type": "string",
+                    "description": "用户性别"
+                },
+                "province": {
+                    "type": "string",
+                    "description": "用户所在省份"
+                }
+            }
+        },
+        "Transactions": {
+            "properties": {
+                "start_time": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "起始时间（时间戳）"
+                },
+                "end_time": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "截止时间（时间戳）"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Transaction"
+                    },
+                    "description": "交易信息集"
+                }
+            }
+        },
+        "Transaction": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "交易ID"
+                },
+                "user_id": {
+                    "type": "string",
+                    "description": "用户唯一标识"
+                },
+                "time": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "交易时间（时间戳）"
+                },
+                "qr_id": {
+                    "type": "string",
+                    "description": "二维码ID"
+                },
+                "resource_id": {
+                    "type": "string",
+                    "description": "交易相关资源"
+                },
+                "amount": {
+                    "type": "integer",
+                    "format": "double",
+                    "description": "交易金额"
                 }
             }
         },
         "ErrorModel": {
-            "type": "object",
-            "required": [
-                "code",
-                "message"
-            ],
             "properties": {
                 "code": {
                     "type": "integer",
-                    "format": "int32"
+                    "description": "错误码"
                 },
-                "message": {
-                    "type": "string"
+                "msg": {
+                    "type": "string",
+                    "description": "错误描述"
                 }
             }
         }
-    }
+    },
+    "host": "virtserver.swaggerhub.com",
+    "basePath": "/jason_tu/DTrade/1.0.0"
 }
