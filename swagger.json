@@ -1,0 +1,1416 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is the API specification for Safe Scan.",
+    "version": "1.0.0",
+    "title": "Safe Scan API Spec",
+    "contact": {
+      "email": "13770644276@126.com"
+    }
+  },
+  "host": "sscan",
+  "basePath": "/v1",
+  "tags": [
+    {
+      "name": "Host",
+      "description": "Host management"
+    },
+    {
+      "name": "WSPattern",
+      "description": "Webshell pattern"
+    },
+    {
+      "name": "BLPattern",
+      "description": "Baseline pattern"
+    },
+    {
+      "name": "User",
+      "description": "User management"
+    },
+    {
+      "name": "Task",
+      "description": "Task management"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/v1/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User login",
+        "description": "",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "credentials",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Credential"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "credential error"
+          }
+        }
+      }
+    },
+    "/api/v1/logout": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User logout",
+        "description": "",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "auth_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "revoke_data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RevokeData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation"
+          },
+          "401": {
+            "description": "credential error"
+          }
+        }
+      }
+    },
+    "/api/v1/tasks": {
+      "post": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Add new scan task",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "task_info",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "406": {
+            "description": "Not accessable"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Get scan task",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Task"
+              }
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{task_id}": {
+      "get": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Get scan task detail info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Update scan task detail info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "task_info",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "406": {
+            "description": "Not accessable"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Delete scan task detail info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{task_id}/scanning": {
+      "post": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Execute the task scan",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "401": {
+            "description": "credential fail"
+          },
+          "406": {
+            "description": "Not accessable"
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{task_id}/scanning_status": {
+      "get": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Get task current scanning status",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskResult"
+            }
+          },
+          "401": {
+            "description": "credential fail"
+          },
+          "406": {
+            "description": "Not accessable"
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{task_id}/scanning_result": {
+      "get": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Get task historical scanning result",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskResult"
+              }
+            }
+          },
+          "401": {
+            "description": "credential fail"
+          },
+          "406": {
+            "description": "Not accessable"
+          }
+        }
+      }
+    },
+    "/api/v1/hosts": {
+      "post": {
+        "tags": [
+          "Host"
+        ],
+        "summary": "Add new host info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "host_info",
+            "description": "Host properties for later scanning",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Host"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "sucessful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Host"
+              }
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "406": {
+            "description": "Not accessable"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "write:hosts"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Host"
+        ],
+        "summary": "Get all hosts info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Host"
+              }
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "read:hosts"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/hosts/{host_id}": {
+      "get": {
+        "tags": [
+          "Host"
+        ],
+        "summary": "Get host detail info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "host_id",
+            "description": "Host Id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/Host"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "read:hosts"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Host"
+        ],
+        "summary": "Update  host detail info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "host_id",
+            "description": "Host Id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "host_info",
+            "description": "host detail info",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Host"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/Host"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "write:hosts"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Host"
+        ],
+        "summary": "Delete host",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "host_id",
+            "description": "Host Id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/Host"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "write:hosts"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/wspatterns": {
+      "post": {
+        "tags": [
+          "WSPattern"
+        ],
+        "summary": "Add new webshell pattern",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "webshell_pattern_info",
+            "description": "webshell pattern info",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WebShellPattern"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/WebShellPattern"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "406": {
+            "description": "Not accessable"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "write:wbpatterns"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "WSPattern"
+        ],
+        "summary": "Get all webshell pattern info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WebShellPattern"
+              }
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "read:wbpatterns"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/wspatterns/{ptn_id}": {
+      "get": {
+        "tags": [
+          "WSPattern"
+        ],
+        "summary": "Get webshell pattern info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ptn_id",
+            "description": "Webshell pattern Id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/WebShellPattern"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "read:wbpatterns"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "WSPattern"
+        ],
+        "summary": "Update webshell pattern detail info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ptn_id",
+            "description": "Webshell pattern Id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "ptn_info",
+            "description": "webshell pattern detail info",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WebShellPattern"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/Host"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "write:wbpatterns"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "WSPattern"
+        ],
+        "summary": "Delete webshell pattern",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ptn_id",
+            "description": "Webshell pattern Id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/WebShellPattern"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "write:wbpatterns"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/blpatterns": {
+      "post": {
+        "tags": [
+          "BLPattern"
+        ],
+        "summary": "Add new baseline pattern",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "baseline_pattern_info",
+            "description": "baseline pattern info",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BaseLinePattern"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/BaseLinePattern"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "406": {
+            "description": "Not accessable"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "write:blpatterns"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "BLPattern"
+        ],
+        "summary": "Get all baseline pattern info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BaseLinePattern"
+              }
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "read:blpatterns"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/blpatterns/{ptn_id}": {
+      "get": {
+        "tags": [
+          "BLPattern"
+        ],
+        "summary": "Get baseline pattern info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ptn_id",
+            "description": "baseline pattern id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/BaseLinePattern"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "read:blpatterns"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "BLPattern"
+        ],
+        "summary": "Update baseline pattern detail info",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ptn_id",
+            "description": "baseline pattern id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "ptn_info",
+            "description": "baseline pattern detail info",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BaseLinePattern"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/BaseLinePattern"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "write:blpatterns"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "BLPattern"
+        ],
+        "summary": "Delete baseline pattern",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ptn_id",
+            "description": "baseline pattern id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "schema": {
+              "$ref": "#/definitions/BaseLinePattern"
+            }
+          },
+          "401": {
+            "description": "auth fail"
+          }
+        },
+        "security": [
+          {
+            "safescan_auth": [
+              "write:blpatterns"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "safescan_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:hosts": "modify host in your account",
+        "read:hosts": "read your hosts",
+        "write:wbpatterns": "modify webshell patterns in your account",
+        "read:wbpatterns": "read your webshell patterns",
+        "write:blpatterns": "modify baseline patterns in your account",
+        "read:blpatterns": "read your baseline patterns"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "Host": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "comm_manner": {
+          "type": "string"
+        },
+        "comm_user": {
+          "type": "string"
+        },
+        "comm_password": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "web_dir": {
+          "type": "string"
+        },
+        "is_executing": {
+          "type": "boolean"
+        }
+      }
+    },
+    "WebShellPattern": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "level": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "handler_script": {
+          "type": "string"
+        },
+        "recovery_advice": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "is_enable": {
+          "type": "boolean"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "timestamp"
+        },
+        "modify_time": {
+          "type": "integer",
+          "format": "timestamp"
+        }
+      }
+    },
+    "BaseLinePattern": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "level": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "auto_recovery_script": {
+          "type": "string"
+        },
+        "recovery_advice": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "is_enable": {
+          "type": "boolean"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "timestamp"
+        },
+        "modify_time": {
+          "type": "integer",
+          "format": "timestamp"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "timestamp"
+        },
+        "modify_time": {
+          "type": "integer",
+          "format": "timestamp"
+        }
+      }
+    },
+    "Credential": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "client_secret": {
+          "type": "string"
+        }
+      }
+    },
+    "RevokeData": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "token_hint": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "client_secret": {
+          "type": "string"
+        },
+        "grant_type": {
+          "type": "string"
+        }
+      }
+    },
+    "Task": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "ttype": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "is_enable": {
+          "type": "boolean"
+        },
+        "target_hosts": {
+          "type": "string"
+        },
+        "is_executing": {
+          "type": "boolean"
+        },
+        "last_ect_time": {
+          "type": "integer",
+          "format": "timestamp"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "timestamp"
+        },
+        "modify_time": {
+          "type": "integer",
+          "format": "timestamp"
+        }
+      }
+    },
+    "HostTaskDetailResult": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "host_task": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "score": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "err_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "HostTaskStatus": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "host_task": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "scanned": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "scanning_ptn": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "scanning_file": {
+          "type": "string"
+        },
+        "scanning_start_time": {
+          "type": "integer",
+          "format": "timestamp"
+        }
+      }
+    },
+    "HostTask": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "task": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "host": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "start_time": {
+          "type": "integer",
+          "format": "timestamp"
+        },
+        "end_time": {
+          "type": "integer",
+          "format": "timestamp"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "timestamp"
+        },
+        "host_task_status": {
+          "type": "object",
+          "$ref": "#/definitions/HostTaskStatus"
+        },
+        "host_task_detail": {
+          "type": "object",
+          "$ref": "#/definitions/HostTaskDetailResult"
+        }
+      }
+    },
+    "TaskResult": {
+      "type": "object",
+      "properties": {
+        "task_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "host_tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HostTask"
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
